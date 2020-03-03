@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/status.dart' as statusCodes;
 
 const URL = 'ws://192.168.1.167:3000';
 
@@ -69,6 +70,13 @@ class AnnouncementPageState extends State<AnnouncementPage> {
     channel = IOWebSocketChannel.connect(URL);
     controller = TextEditingController();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    channel.sink.close(statusCodes.goingAway);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +89,10 @@ class AnnouncementPageState extends State<AnnouncementPage> {
             StreamBuilder(
               stream: channel.stream,
               builder: (context, snapshot) {
-                return Text(snapshot.data.toString(), style: Theme.of(context).textTheme.display1);
+                return Text(
+                  snapshot.data.toString(),
+                  style: Theme.of(context).textTheme.display1
+                );
               },
             ),
             TextField(
