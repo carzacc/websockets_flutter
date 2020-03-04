@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/status.dart' as statusCodes;
-
 const URL = 'ws://192.168.1.167:3000';
 
 void main() => runApp(MyApp());
@@ -56,20 +54,13 @@ class AnnouncementPage extends StatelessWidget {
 
   final String nickname;
 
-  IOWebSocketChannel channel;
-  TextEditingController controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    channel = IOWebSocketChannel.connect(URL);
-    controller = TextEditingController();
-  }
+  final IOWebSocketChannel channel = IOWebSocketChannel.connect(URL);
+  final TextEditingController controller = TextEditingController();
 
 
   @override
   Widget build(BuildContext context) {
-    channel = IOWebSocketChannel.connect(URL);
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -81,10 +72,13 @@ class AnnouncementPage extends StatelessWidget {
             StreamBuilder(
               stream: channel.stream,
               builder: (context, snapshot) {
-                return Text(
-                  snapshot.data.toString(),
-                  style: Theme.of(context).textTheme.display1
-                );
+                return snapshot.hasData ? 
+                  Text(
+                    snapshot.data.toString(),
+                    style: Theme.of(context).textTheme.display1
+                  )
+                  :
+                  CircularProgressIndicator();
               },
             ),
             TextField(
