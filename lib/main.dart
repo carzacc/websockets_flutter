@@ -51,18 +51,13 @@ class FauxLoginPage extends StatelessWidget {
     );
 }
 
-class AnnouncementPage extends StatefulWidget {
+class AnnouncementPage extends StatelessWidget {
   AnnouncementPage(this.nickname);
 
   final String nickname;
 
-  @override
-  AnnouncementPageState createState() => AnnouncementPageState();
-}
-
-class AnnouncementPageState extends State<AnnouncementPage> {
   IOWebSocketChannel channel;
-  TextEditingController controller;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -71,14 +66,11 @@ class AnnouncementPageState extends State<AnnouncementPage> {
     controller = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    channel.sink.close(statusCodes.goingAway);
-  }
 
   @override
   Widget build(BuildContext context) {
+    channel = IOWebSocketChannel.connect(URL);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Announcement Page"),
@@ -107,7 +99,7 @@ class AnnouncementPageState extends State<AnnouncementPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.send),
         onPressed: () {
-          channel.sink.add("${widget.nickname}: ${controller.text}");
+          channel.sink.add("$nickname: ${controller.text}");
         }
       ),
     );
