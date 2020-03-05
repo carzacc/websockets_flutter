@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 // substitute your server's IP and port
 const YOUR_SERVER_IP = 'SERVER_IP';
@@ -58,7 +58,7 @@ class AnnouncementPage extends StatelessWidget {
 
   final String nickname;
 
-  final IOWebSocketChannel channel = IOWebSocketChannel.connect(URL);
+  final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse(URL));
   final TextEditingController controller = TextEditingController();
 
 
